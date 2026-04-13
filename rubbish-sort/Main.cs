@@ -4,10 +4,13 @@ using System;
 
 public partial class Main : Node2D
 {
+    public static Main instance;
+    public static Dictionary gameData;
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
         //load data
+        gameData = new Dictionary();
 
         //disable auto accept quit to allow for saving before quitting
         GetTree().AutoAcceptQuit = false;
