@@ -21,7 +21,7 @@ public partial class Main : Node2D
             //get dictionary of data
             Dictionary saveData = (Dictionary)file.GetVar();
 
-            // dont cause memory leak
+            // close file
             file.Close();
 
             // get total points player has
