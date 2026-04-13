@@ -1,0 +1,40 @@
+[gd_scene load_steps=2 format=3 uid="uid://c2nihg3ln24m2"]
+
+[ext_resource type="Script" path="res://Main.cs" id="1_o3j47"]
+
+[node name="Main" type="Node2D"]
+script = ExtResource("1_o3j47")
+
+[node name="Screen" type="Node2D" parent="."]
+
+[node name="ColorRect" type="ColorRect" parent="Screen"]
+offset_right = 1920.0
+offset_bottom = 1080.0
+mouse_filter = 2
+color = Color(0.419813, 0.419813, 0.419813, 1)
+
+[node name="ColorRect3" type="ColorRect" parent="Screen"]
+offset_right = 1920.0
+offset_bottom = 108.0
+mouse_filter = 2
+color = Color(0.581033, 0.581033, 0.581033, 1)
+
+[node name="ColorRect4" type="ColorRect" parent="Screen"]
+offset_top = 972.0
+offset_right = 1920.0
+offset_bottom = 1080.0
+mouse_filter = 2
+color = Color(0.581033, 0.581033, 0.581033, 1)
+
+[node name="ColorRect5" type="ColorRect" parent="Screen"]
+offset_right = 108.0
+offset_bottom = 1080.0
+mouse_filter = 2
+color = Color(0.581033, 0.581033, 0.581033, 1)
+
+[node name="ColorRect6" type="ColorRect" parent="Screen"]
+offset_left = 1812.0
+offset_right = 1920.0
+offset_bottom = 1080.0
+mouse_filter = 2
+color = Color(0.581033, 0.581033, 0.581033, 1)
