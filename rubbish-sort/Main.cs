@@ -4,13 +4,24 @@ using System;
 
 public partial class Main : Node2D
 {
-    public static Main instance;
+    public static Main Instance;
     public static Dictionary gameData;
+    public int test
+    {
+        get => (int)gameData["test"];
+        set
+        {
+            gameData["test"] = value;
+        }
+    }
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
-        //load data
+        gameData["_mute"] = false;
+        gameData["test"] = 0;
+        Instance = this;
         gameData = new Dictionary();
+        //load data
 
         //disable auto accept quit to allow for saving before quitting
         GetTree().AutoAcceptQuit = false;
@@ -24,27 +35,18 @@ public partial class Main : Node2D
             //get dictionary of data
             Dictionary saveData = (Dictionary)file.GetVar();
 
-            // close file
+            // close cuz unneeded and prevents issues
             file.Close();
-
-            // get total points player has
-            //level = (int)saveData["level"];
-            //var pts = (int)saveData["totalPts"];
-            //setTotalPts(pts);
-            //skillPts = (int)saveData["skillPts"];
-            //if (skillPts > 0) hasSkillPts = true;
-
-            //var skills = (Dictionary<Skills, int>)saveData["skillsUnlocked"];
-            //foreach (Skills skill in Enum.GetValues(typeof(Skills)))
-            //{
-            //    if (skills.ContainsKey(skill))
-            //    {
-            //        skillsUnlocked[skill] = skills[skill];
-            //    }
-            //}
+            foreach (var kvp in saveData)
+            {
+                gameData[kvp.Key] = kvp.Value;
+            }
+            //money = money;
+            //plotlevel = plotlevel;
+            //plantcount = plantcount;
         }
-        //generate enemy on base floor to test
-        //instantiateEnemy(enemyList[3]); 
+        //test below
+        //money = 100000;
     }
     void _notification(int what)
     {
@@ -57,10 +59,11 @@ public partial class Main : Node2D
 
             // do save stuff here
             Dictionary saveData = new Dictionary();
-            //saveData["totalPts"] = totalPts;
-            //saveData["skillsUnlocked"] = skillsUnlocked;
-            //saveData["skillPts"] = skillPts;
-            //saveData["level"] = level;
+            saveData = gameData;
+            /*saveData["totalPts"] = totalPts;
+			saveData["skillsUnlocked"] = skillsUnlocked;
+			saveData["skillPts"] = skillPts;
+			saveData["level"] = level;*/
             // save to file
             var file = FileAccess.Open("user://savegame.save", FileAccess.ModeFlags.Write);
             file.StoreVar(saveData);
@@ -84,15 +87,41 @@ public partial class Main : Node2D
     {
         sfx, music, menu
     }
-    public void sound(string sound, SoundType soundtype = SoundType.sfx)
+    bool _mute
     {
+        get => (bool)gameData["_mute"];
+        set
+        {
+            gameData["_mute"] = value;
+        }
+    }
+    public static void sound(string sound, SoundType soundtype = SoundType.sfx)
+    {
+        if (Instance._mute) return;
+        if (FileAccess.FileExists("res://assets/audio/" + sound + ".wav") == false)
+        {
+            GD.Print("sound: " + sound + " of type " + soundtype.ToString());
+            return;
+        }
         var soundwav = GD.Load<AudioStreamWav>("res://assets/audio/" + sound + ".wav");
         if (soundwav == null)
         {
-            //GD.Print("sound: " + sound + " of type " + soundtype.toString());
+            GD.Print("sound: " + sound + " of type " + soundtype.ToString());
             return;
         }
 
         return;
+    }
+    public void mute()
+    {
+        _mute = true;
+    }
+    public void unmute()
+    {
+        _mute = false;
+    }
+    public void toggleMute()
+    {
+        _mute = !_mute;
     }
 }
