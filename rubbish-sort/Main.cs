@@ -6,21 +6,48 @@ public partial class Main : Node2D
 {
     public static Main Instance;
     public static Dictionary gameData;
+
+    //game variables
     public int test
     {
         get => (int)gameData["test"];
         set
         {
+            if (value > 9999) value = 0;
             gameData["test"] = value;
+            experimentLabel.Text = $"experiment #3-{robot:00}-{test:0000}";
         }
     }
+    public int robot
+    {
+        get => (int)gameData["robot"];
+        set
+        {
+            if (value > 99) value = 0;
+            gameData["robot"] = value;
+            experimentLabel.Text = $"experiment #3-{robot:00}-{test:0000}";
+        }
+    }
+
+    //game visual variables
+
+    private Label experimentLabel;
+
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
-        gameData["_mute"] = false;
-        gameData["test"] = 0;
-        Instance = this;
+        //initialize visual variables
+
+        experimentLabel = GetNode<Label>("OverScreen/ExperimentLabel");
+
+        //initialize game data
+
         gameData = new Dictionary();
+        gameData["_mute"] = false;
+        gameData["test"] = 1;
+        gameData["robot"] = 1;
+        Instance = this;
+
         //load data
 
         //disable auto accept quit to allow for saving before quitting
@@ -44,6 +71,7 @@ public partial class Main : Node2D
             //money = money;
             //plotlevel = plotlevel;
             //plantcount = plantcount;
+            experimentLabel.Text = $"experiment #3-{robot:00}-{test:0000}";
         }
         //test below
         //money = 100000;

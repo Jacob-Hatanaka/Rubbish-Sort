@@ -1,6 +1,31 @@
-[gd_scene load_steps=2 format=3 uid="uid://c2nihg3ln24m2"]
+[gd_scene load_steps=10 format=3 uid="uid://c2nihg3ln24m2"]
 
 [ext_resource type="Script" path="res://Main.cs" id="1_o3j47"]
+[ext_resource type="FontFile" uid="uid://cgjpgd1hvtv8m" path="res://assets/pixelformer2.ttf" id="2_tstwl"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_cjbng"]
+font = ExtResource("2_tstwl")
+font_size = 80
+font_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_8cueu"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_663w3"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_8pr18"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_bmdu8"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_x8lna"]
+
+[sub_resource type="Theme" id="Theme_vsr3o"]
+Button/colors/font_color = Color(0, 0, 0, 1)
+Button/font_sizes/font_size = 80
+Button/styles/disabled = SubResource("StyleBoxEmpty_8cueu")
+Button/styles/focus = SubResource("StyleBoxEmpty_663w3")
+Button/styles/hover = SubResource("StyleBoxEmpty_8pr18")
+Button/styles/normal = SubResource("StyleBoxEmpty_bmdu8")
+Button/styles/pressed = SubResource("StyleBoxEmpty_x8lna")
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_o3j47")
@@ -35,3 +60,24 @@ offset_left = 1812.0
 offset_right = 1920.0
 offset_bottom = 1080.0
 mouse_filter = 2
+
+[node name="OverScreen" type="Node2D" parent="."]
+z_index = 1000
+
+[node name="ExperimentLabel" type="Label" parent="OverScreen"]
+offset_left = 31.0
+offset_top = 8.0
+offset_right = 976.0
+offset_bottom = 88.0
+text = "experiment #3-01-0001"
+label_settings = SubResource("LabelSettings_cjbng")
+
+[node name="Button" type="Button" parent="OverScreen"]
+offset_left = 1655.0
+offset_top = 8.0
+offset_right = 1895.0
+offset_bottom = 100.0
+theme = SubResource("Theme_vsr3o")
+text = "reset"
+
+[connection signal="pressed" from="OverScreen/Button" to="." method="resetAll"]
