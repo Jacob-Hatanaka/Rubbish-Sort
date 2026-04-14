@@ -198,6 +198,7 @@ public partial class Item : CharacterBody2D
                 velocity.X = Mathf.MoveToward(velocity.X, 0, Acceleration * (float)delta);
                 velocity.Y = Mathf.MoveToward(velocity.Y, 0, Acceleration * (float)delta);
             }
+            velocity += GetGravity();
 
 
             Velocity = velocity;
@@ -206,9 +207,8 @@ public partial class Item : CharacterBody2D
     }
     public override void _Input(InputEvent @event)
     {
-        if (@event is InputEventMouseMotion eventMouseMotion && Input.IsMouseButtonPressed(MouseButton.Left))
+        if (Input.IsActionJustPressed("lclick"))
         {
-
             var mousePos = GetGlobalMousePosition();
             var spaceState = GetWorld2D().DirectSpaceState;
             var param = new PhysicsPointQueryParameters2D();
@@ -223,9 +223,8 @@ public partial class Item : CharacterBody2D
                     selected = item;
                 }
             }
-
         }
-        else if (@event is InputEventMouseButton eventMouseButton && eventMouseButton.ButtonIndex == MouseButton.Left)
+        else if (Input.IsActionJustReleased("lclick"))
         {
             selected = null;
         }
