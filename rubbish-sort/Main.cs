@@ -1,6 +1,7 @@
 using Godot;
 using Godot.Collections;
 using System;
+using System.Reflection.Metadata;
 
 public partial class Main : Node2D
 {
@@ -152,4 +153,82 @@ public partial class Main : Node2D
     {
         _mute = !_mute;
     }
+
+}
+
+public enum ItemType
+{
+    plastic, paper, metal, glass, cardboard
+}
+public partial class Item : CharacterBody2D
+{
+    Item selected;
+    ItemType type;
+    public Item(ItemType type)
+    {
+        this.type = type;
+
+        CollisionMask = 1;
+        CollisionLayer = 3;
+    }
+    public override void _Ready()
+    {
+
+    }
+    const int Speed = 200;
+    const int Acceleration = 500;
+    public override void _PhysicsProcess(double delta)
+    {
+        if (selected == this)
+        {
+            var mousePos = GetGlobalMousePosition();
+            var direction = (mousePos - GlobalPosition);
+            Vector2 velocity = Velocity;
+            // Add the gravity.
+
+            // Get the input direction and handle the movement/deceleration.
+            // As good practice, you should replace UI actions with custom gameplay actions.
+            if (direction != Vector2.Zero)
+            {
+                velocity.X = Mathf.MoveToward(velocity.X, Speed * direction.X, Acceleration * (float)delta);
+                velocity.Y = Mathf.MoveToward(velocity.Y, Speed * direction.Y, Acceleration * (float)delta);
+            }
+            else
+            {
+                velocity.X = Mathf.MoveToward(velocity.X, 0, Acceleration * (float)delta);
+                velocity.Y = Mathf.MoveToward(velocity.Y, 0, Acceleration * (float)delta);
+            }
+
+
+            Velocity = velocity;
+        }
+        MoveAndSlide();
+    }
+    public override void _Input(InputEvent @event)
+    {
+        if (@event is InputEventMouseMotion eventMouseMotion && Input.IsMouseButtonPressed(MouseButton.Left))
+        {
+
+            var mousePos = GetGlobalMousePosition();
+            var spaceState = GetWorld2D().DirectSpaceState;
+            var param = new PhysicsPointQueryParameters2D();
+            param.Position = mousePos;
+            param.CollisionMask = 2;
+            var result = spaceState.IntersectPoint(param);
+            if (result.Count > 0)
+            {
+                var collider = (Node)result[0]["collider"];
+                if (collider is Item item)
+                {
+                    selected = item;
+                }
+            }
+
+        }
+        else if (@event is InputEventMouseButton eventMouseButton && eventMouseButton.ButtonIndex == MouseButton.Left)
+        {
+            selected = null;
+        }
+    }
+
 }
