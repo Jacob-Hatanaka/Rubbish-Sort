@@ -16,7 +16,7 @@ public partial class Main : Node2D
         {
             if (value > 9999) value = 0;
             gameData["test"] = value;
-            experimentLabel.Text = $"experiment #3-{robot:00}-{test:0000}";
+            experimentLabel.Text = $"#3-{robot:00}-{test:0000}";
         }
     }
     public int robot
@@ -26,7 +26,7 @@ public partial class Main : Node2D
         {
             if (value > 99) value = 0;
             gameData["robot"] = value;
-            experimentLabel.Text = $"experiment #3-{robot:00}-{test:0000}";
+            experimentLabel.Text = $"#3-{robot:00}-{test:0000}";
         }
     }
 
