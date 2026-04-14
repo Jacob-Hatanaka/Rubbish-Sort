@@ -163,7 +163,7 @@ public enum ItemType
 public partial class Item : CharacterBody2D
 {
     Item selected;
-    ItemType type;
+    public ItemType type;
     public Item(ItemType type)
     {
         this.type = type;
@@ -179,43 +179,34 @@ public partial class Item : CharacterBody2D
     const int Acceleration = 500;
     public override void _PhysicsProcess(double delta)
     {
+        var direction = Vector2.Zero;
         if (selected == this)
         {
             var mousePos = GetGlobalMousePosition();
-            var direction = (mousePos - GlobalPosition);
-            Vector2 velocity = Velocity;
-            // Add the gravity.
-
-            // Get the input direction and handle the movement/deceleration.
-            // As good practice, you should replace UI actions with custom gameplay actions.
-            if (direction != Vector2.Zero)
-            {
-                velocity.X = Mathf.MoveToward(velocity.X, Speed * direction.X, Acceleration * (float)delta);
-                velocity.Y = Mathf.MoveToward(velocity.Y, Speed * direction.Y, Acceleration * (float)delta);
-            }
-            else
-            {
-                velocity.X = Mathf.MoveToward(velocity.X, 0, Acceleration * (float)delta);
-                velocity.Y = Mathf.MoveToward(velocity.Y, 0, Acceleration * (float)delta);
-            }
-            velocity += GetGravity();
-
-
-            Velocity = velocity;
+            direction = (mousePos - GlobalPosition);
         }
+        Vector2 velocity = Velocity;
+        // Add the gravity.
+
+        // Get the input direction and handle the movement/deceleration.
+        // As good practice, you should replace UI actions with custom gameplay actions.
+        if (direction != Vector2.Zero)
+        {
+            velocity.X = Mathf.MoveToward(velocity.X, Speed * direction.X, Acceleration * (float)delta);
+            velocity.Y = Mathf.MoveToward(velocity.Y, Speed * direction.Y, Acceleration * (float)delta);
+        }
+        else
+        {
+            velocity.X = Mathf.MoveToward(velocity.X, 0, Acceleration * (float)delta);
+            velocity.Y = Mathf.MoveToward(velocity.Y, 0, Acceleration * (float)delta);
+        }
+        velocity += GetGravity();
+
+
+        Velocity = velocity;
         MoveAndSlide();
     }
-    private void _on_body_entered(Node2D body)
-    {
-        if (body is Bin bin)
-        {
-            QueueFree();
-            if (bin.type == type)
-            {
 
-            }
-        }
-    }
     public override void _Input(InputEvent @event)
     {
         if (Input.IsActionJustPressed("lclick"))
@@ -240,20 +231,40 @@ public partial class Item : CharacterBody2D
             selected = null;
         }
     }
-
 }
 
-public partial class Bin : StaticBody2D
+public partial class Bin : Area2D
 {
     public ItemType type;
+    CollisionShape2D collisionShape2D;
     public Bin(ItemType type)
     {
         this.type = type;
         CollisionMask = 1;
         CollisionLayer = 1;
+        this.BodyEntered += _on_body_entered;
+        collisionShape2D = new CollisionShape2D()
+        {
+            Shape = new RectangleShape2D() { Size = new Vector2(64, 64) }
+        };
     }
     public override void _Ready()
     {
-
+        AddChild(collisionShape2D);
+    }
+    private void _on_body_entered(Node2D body)
+    {
+        if (body is Item item)
+        {
+            item.QueueFree();
+            if (item.type == type)
+            {
+                GD.Print("correct");
+            }
+            else
+            {
+                GD.Print("false");
+            }
+        }
     }
 }
