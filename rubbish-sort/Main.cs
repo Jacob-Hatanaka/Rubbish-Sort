@@ -205,6 +205,17 @@ public partial class Item : CharacterBody2D
         }
         MoveAndSlide();
     }
+    private void _on_body_entered(Node2D body)
+    {
+        if (body is Bin bin)
+        {
+            QueueFree();
+            if (bin.type == type)
+            {
+
+            }
+        }
+    }
     public override void _Input(InputEvent @event)
     {
         if (Input.IsActionJustPressed("lclick"))
@@ -230,4 +241,19 @@ public partial class Item : CharacterBody2D
         }
     }
 
+}
+
+public partial class Bin : StaticBody2D
+{
+    public ItemType type;
+    public Bin(ItemType type)
+    {
+        this.type = type;
+        CollisionMask = 1;
+        CollisionLayer = 1;
+    }
+    public override void _Ready()
+    {
+
+    }
 }
