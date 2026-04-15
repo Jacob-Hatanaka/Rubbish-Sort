@@ -154,6 +154,13 @@ public partial class Main : Node2D
         _mute = !_mute;
     }
 
+    public void nextTest()
+    {
+        test++;
+        AddChild(new Test(test));
+        //visuals and intiialize objects
+    }
+
 }
 
 public enum ItemType
@@ -268,3 +275,23 @@ public partial class Bin : Area2D
         }
     }
 }
+public partial class Test : Node2D
+{
+    int testNum;
+    public Test(int testNum)
+    {
+        this.testNum = testNum;
+    }
+    public override void _Ready()
+    {
+        //spawn items and bins based on testnum
+        for (int i = 0; i < 5; i++)
+        {
+            var item = new Item((ItemType)(i % 5));
+            item.Position = new Vector2(100, 100 + i * 70);
+            AddChild(item);
+            var bin = new Bin((ItemType)(i % 5));
+            bin.Position = new Vector2(400, 100 + i * 70);
+            AddChild(bin);
+        }
+    }
