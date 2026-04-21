@@ -165,7 +165,7 @@ public partial class Main : Node2D
 
 public enum ItemType
 {
-    plastic, paper, metal, glass, cardboard
+    recycleable, trash, compostable, plastic, paper, metal, glass, cardboard, food, plant, other
 }
 public partial class Item : CharacterBody2D
 {
@@ -177,6 +177,22 @@ public partial class Item : CharacterBody2D
 
         CollisionMask = 1;
         CollisionLayer = 3;
+    }
+    public static bool isTypeOf(ItemType type, Item item)
+    {
+        if (item.type == type) return true;
+        ItemType itemType = item.type;
+        switch (type)
+        {
+            case ItemType.recycleable:
+                return item.type == ItemType.plastic || item.type == ItemType.metal || item.type == ItemType.glass || item.type == ItemType.cardboard;
+            case ItemType.trash:
+                return item.type == ItemType.food || item.type == ItemType.plant || item.type == ItemType.paper || item.type == ItemType.other;
+            case ItemType.compostable:
+                return item.type == ItemType.food || item.type == ItemType.plant;
+            default:
+                return false;
+        }
     }
     public override void _Ready()
     {
@@ -244,7 +260,7 @@ public partial class Bin : Area2D
 {
     public ItemType type;
     CollisionShape2D collisionShape2D;
-    public Bin(ItemType type)
+    public Bin(ItemType type, int width = 360)
     {
         this.type = type;
         CollisionMask = 1;
@@ -252,7 +268,7 @@ public partial class Bin : Area2D
         this.BodyEntered += _on_body_entered;
         collisionShape2D = new CollisionShape2D()
         {
-            Shape = new RectangleShape2D() { Size = new Vector2(64, 64) }
+            Shape = new RectangleShape2D() { Size = new Vector2(width, 100) }
         };
     }
     public override void _Ready()
@@ -278,9 +294,25 @@ public partial class Bin : Area2D
 public partial class Test : Node2D
 {
     int testNum;
+    int itemsLeft = 5;
+    Bin[] bins;
     public Test(int testNum)
     {
         this.testNum = testNum;
+        //rand number of items between 5 and 15, with more items as testNum increases
+        itemsLeft += ((int)(10 * ((testNum + 10) / 20 < 1 ? (testNum + 10) / 20 : 1) * GD.Randf()));
+        Position = new Vector2(0, 1820);
+        bins = determineBims();
+    }
+    private static Bin[] determineBims()
+    {
+        Bin[] bins = new Bin[5];
+        for (int i = 0; i < 5; i++)
+        {
+            bins[i] = new Bin((ItemType)(i % 5));
+            bins[i].Position = new Vector2(i * 150, 0);
+        }
+        return bins;
     }
     public override void _Ready()
     {
@@ -295,3 +327,4 @@ public partial class Test : Node2D
             AddChild(bin);
         }
     }
+}
