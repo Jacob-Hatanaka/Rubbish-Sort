@@ -302,9 +302,9 @@ public partial class Test : Node2D
         //rand number of items between 5 and 15, with more items as testNum increases
         itemsLeft += ((int)(10 * ((testNum + 10) / 20 < 1 ? (testNum + 10) / 20 : 1) * GD.Randf()));
         Position = new Vector2(0, 1820);
-        bins = determineBims();
+        bins = determineBins();
     }
-    private static Bin[] determineBims()
+    private static Bin[] determineBins()
     {
         Bin[] bins = new Bin[5];
         for (int i = 0; i < 5; i++)
